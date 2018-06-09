@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Laravel</title>
+        <script src="{{URL::asset('js/eloquent.js')}}"></script>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -63,6 +64,15 @@
                 margin-bottom: 30px;
             }
         </style>
+        <script>
+            var UserModel = EloquentJs.ModelFactory('User');
+
+            UserModel.all().then(data => console.log('All users: ', data));
+            UserModel.find(10).then(data => console.log('User with id=10: ', data));
+            UserModel.where('id',  10).get().then(data => console.log('User with id=10: ', data));
+            UserModel.where('name', 'like', 'Dr.%').get().then(data => console.log('Doctors: ', data));
+            UserModel.where('name', 'like', 'Dr.%').orWhere('name', 'like', 'Prof.%').get().then(data => console.log('Drs and Profs: ', data));
+        </script>
     </head>
     <body>
         <div class="flex-center position-ref full-height">
