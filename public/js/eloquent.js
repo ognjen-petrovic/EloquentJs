@@ -101,7 +101,23 @@
                 */
             });
         });
-    } 
+    }
+    ejs.common.count = function () {
+        return new Promise((resolve, reject) => {
+            this._addMethod('count', []);
+
+            var promise = ejs.httpAdapter.get(this._getAndClearMethods());
+            promise.then(data => {
+                resolve(data);
+                /*
+                var models = [];
+                for (var i = 0; i < data.length; ++i)
+                    models.push(new modelClass(data[i]))
+                resolve(models)
+                */
+            });
+        });
+    }
 
     ejs.ModelFactory = function (modelName) {
         var modelClass = class {
@@ -109,6 +125,22 @@
                 for (var prop in data) {
                     this[prop] = data[prop];
                 }
+            }
+
+            save(){
+                // for (var p in this){
+                    return new Promise((resolve, reject) => {
+                        // modelClass._addMethod('find', [this.id]);
+                        // modelClass._addMethod('fill', [this]);
+                        // modelClass._addMethod('save', []);
+                        modelClass._addMethod('updateOrCreate', [this]);
+                        var promise = ejs.httpAdapter.get(modelClass._getAndClearMethods());
+                        promise.then(data => {
+                            resolve(data);
+                        });
+                    });
+                // }
+
             }
         };
     
@@ -128,13 +160,12 @@
             return { 'method': name, 'params': params };
         }
     
-    
-    
         modelClass._getAndClearMethods = function () {
             return this._methods.splice(0, this._methods.length);
         }
     
         modelClass.all = ejs.common.all;
+        modelClass.count = ejs.common.count;
     
         modelClass.find = function (id) {
     

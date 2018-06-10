@@ -17,6 +17,9 @@ class EloquentJsApi extends Controller
             $ret = call_user_func_array([$ret, $payload[$i]['method']], $payload[$i]['params']);
         }
 
+        if (is_bool($ret))
+            $ret = (string) $ret;
+            
         return $ret;
     }
 }

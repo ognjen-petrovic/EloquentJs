@@ -80,6 +80,10 @@
             //update
             ObjectModel.where('id', '<', 5).update({capacity: 1});
 
+            //Count
+            UserModel.count().then(data => console.log('Count users: ', data))
+            UserModel.where('email', 'like', '%example.org').count().then(data => console.log('Count users with mail account at example.org: ', data))
+
 
         </script>
     </head>
