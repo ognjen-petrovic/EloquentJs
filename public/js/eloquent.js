@@ -85,6 +85,24 @@
 
     var ejs = window[EloquentJs] = window[EloquentJs] || {};
 
+    ejs.common = {};
+    ejs.common.all = function () {
+        return new Promise((resolve, reject) => {
+            this._addMethod('all', []);
+
+            var promise = ejs.httpAdapter.get(this._getAndClearMethods());
+            promise.then(data => {
+                resolve(data); 
+                /*
+                var models = [];
+                for (var i = 0; i < data.length; ++i)
+                    models.push(new this(data[i]))
+                resolve(models)
+                */
+            });
+        });
+    } 
+
     ejs.ModelFactory = function (modelName) {
         var modelClass = class {
             constructor(data) {
@@ -116,19 +134,7 @@
             return this._methods.splice(0, this._methods.length);
         }
     
-        modelClass.all = function () {
-            return new Promise((resolve, reject) => {
-                this._addMethod('all', []);
-    
-                var promise = ejs.httpAdapter.get(this._getAndClearMethods());
-                promise.then(data => {
-                    var models = [];
-                    for (var i = 0; i < data.length; ++i)
-                        models.push(new modelClass(data[i]))
-                    resolve(models)
-                });
-            });
-        }
+        modelClass.all = ejs.common.all;
     
         modelClass.find = function (id) {
     
@@ -187,6 +193,19 @@
             });
         }
     
+        modelClass.with = function (relation_name) {
+            this._addMethod('with', [relation_name]);
+            return this;
+        }
+    
+        /**
+         * oFieldsValues {address: 'new addres, age: 666, ....}
+         */
+        modelClass.update = function (oFieldsValues) {
+            this._addMethod('update', [oFieldsValues]);
+            var promise = ejs.httpAdapter.get(this._getAndClearMethods());
+            return promise;
+        }
     
         return modelClass;
     }

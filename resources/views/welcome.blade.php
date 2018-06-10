@@ -72,6 +72,15 @@
             UserModel.where('id',  10).get().then(data => console.log('User with id=10: ', data));
             UserModel.where('name', 'like', 'Dr.%').get().then(data => console.log('Doctors: ', data));
             UserModel.where('name', 'like', 'Dr.%').orWhere('name', 'like', 'Prof.%').get().then(data => console.log('Drs and Profs: ', data));
+
+            var ObjectModel = EloquentJs.ModelFactory('Object');
+            ObjectModel.all().then(data => console.log('All objects: ', data));
+            UserModel.where('id',  '<', 5).with('objects').get().then(data => console.log('Some users with related objects: ', data));
+
+            //update
+            ObjectModel.where('id', '<', 5).update({capacity: 1});
+
+
         </script>
     </head>
     <body>
