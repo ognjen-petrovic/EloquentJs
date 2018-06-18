@@ -4,7 +4,9 @@ php artisan migrate
 php artisan db:seed
 ``` 
 
-[Vutify data table example](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table)
+[Vuetify data table example](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table)
+
+[Vuetify data table example, orderable by ID, Name or E-mail](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table-order-by)
 
 ## Example
 ```javascript
