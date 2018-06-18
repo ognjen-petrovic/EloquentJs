@@ -20,4 +20,7 @@ UserModel.where('id',  '<', 5).with('objects').get().then(data => console.log('S
 
 //update
 ObjectModel.where('id', '<', 5).update({capacity: 1});
+
+//paginate
+UserModel.paginate(10,1);
 ```

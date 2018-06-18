@@ -213,19 +213,18 @@
             }
 
             save(){
-                // for (var p in this){
-                    return new Promise((resolve, reject) => {
-                        // modelClass._addMethod('find', [this.id]);
-                        // modelClass._addMethod('fill', [this]);
-                        // modelClass._addMethod('save', []);
-                        modelClass._addMethod('updateOrCreate', [this]);
-                        var promise = ejs.httpAdapter.get(modelClass._getAndClearMethods());
-                        promise.then(data => {
-                            resolve(data);
-                        });
+                return new Promise((resolve, reject) => {
+                    /*                  
+                    modelClass._addMethod('find', [this.id]);
+                    modelClass._addMethod('fill', [this]);
+                    modelClass._addMethod('save', []); 
+                    */
+                    modelClass._addMethod('updateOrCreate', [this]);
+                    var promise = ejs.httpAdapter.get(modelClass._getAndClearMethods());
+                    promise.then(data => {
+                        resolve(data);
                     });
-                // }
-
+                });
             }
         };
     

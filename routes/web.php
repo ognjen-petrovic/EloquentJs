@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/vuetify/data-table', function () {
+    return view('vuetify/data-table');
+});
