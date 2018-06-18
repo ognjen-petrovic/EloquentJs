@@ -23,5 +23,6 @@ UserModel.where('id',  '<', 5).with('objects').get().then(data => console.log('S
 ObjectModel.where('id', '<', 5).update({capacity: 1});
 
 //paginate
-UserModel.paginate(10,1);
+UserModel.paginate(10,1).then(data => console.log('Paginate users: ', data));
+UserModel.orderBy('name').paginate(10,1).then(data => console.log('Paginate ordered users: ', data));;
 ```

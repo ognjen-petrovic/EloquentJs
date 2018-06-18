@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EloquentJs - Vuetify data table example</title>
+  <title>EloquentJs - ordered Vuetify data table example</title>
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
   <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
 </head>
@@ -46,16 +46,17 @@ new Vue({
             loading: true,
             pagination: {
                 rowsPerPage:10,
+                descending: true
             },
             headers: [
                 {
                 text: 'ID',
                 align: 'left',
-                sortable: false,
+                sortable: true,
                 value: 'id'
                 },
-                { text: 'Name', value: 'name', sortable: false },
-                { text: 'E-mail', value: 'email', sortable: false },
+                { text: 'Name', value: 'name', sortable: true },
+                { text: 'E-mail', value: 'email', sortable: true },
                 { text: 'Created at', value: 'created_at', sortable: false },
                 { text: 'Updated at', value: 'updated_at', sortable: false },
             ]
@@ -63,7 +64,8 @@ new Vue({
     },
 
     mounted () {
-        UserModel.paginate(this.pagination.rowsPerPage ,1)
+        UserModel.orderBy(this.pagination.sortBy, !this.pagination.descending)
+            .paginate(this.pagination.rowsPerPage ,1)
             .then(response => {
                 this.users = response.data
                 this.totalUsers = response.total
@@ -85,7 +87,7 @@ new Vue({
                     var rowsPerPage = newState.rowsPerPage;
                     var page = newState.page
                 }
-                UserModel.paginate(rowsPerPage, page)
+                UserModel.orderBy(newState.sortBy, !newState.descending).paginate(rowsPerPage, page)
                     .then(response => {
                         this.users = response.data
                         this.totalUsers = response.total

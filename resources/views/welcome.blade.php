@@ -84,6 +84,10 @@
             UserModel.count().then(data => console.log('Count users: ', data))
             UserModel.where('email', 'like', '%example.org').count().then(data => console.log('Count users with mail account at example.org: ', data))
 
+            //paginate
+            UserModel.paginate(10,1).then(data => console.log('Paginate users: ', data));
+            UserModel.orderBy('name').paginate(10,1).then(data => console.log('Paginate ordered users: ', data));;
+
 
         </script>
     </head>

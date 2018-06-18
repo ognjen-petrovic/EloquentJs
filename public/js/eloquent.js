@@ -203,6 +203,19 @@
         return promise;
     }
 
+    ejs.common.orderBy = function (column, direction = 'asc') {
+        if (direction === false)
+        {
+            direction = 'desc';
+        }
+        else if (direction === true || direction === null || direction != 'desc') {
+            direction = 'asc';
+        }
+        
+        this._addMethod('orderBy', [column, direction]);
+        return this;
+    }
+
 
     ejs.ModelFactory = function (modelName) {
         var modelClass = class {
@@ -243,7 +256,8 @@
         modelClass.orWhere = ejs.common.orWhere;
         modelClass.get = ejs.common.get;
         modelClass.with = ejs.common.with;
-        modelClass.update = ejs.common.update
+        modelClass.update = ejs.common.update;
+        modelClass.orderBy = ejs.common.orderBy;
     
         return modelClass;
     }
