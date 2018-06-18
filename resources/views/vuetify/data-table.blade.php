@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Vuetify</title>
+  <title>EloquentJs - Vuetify data table example</title>
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
   <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
 </head>
@@ -73,17 +73,17 @@ new Vue({
 
     watch: {
         pagination: {
-        handler (e, e0) {
-            if (e0.totalItems == 0 || typeof e0.totalItems == 'undefined') return;
-            if (e.rowsPerPage == -1) // All values
+        handler (newState, oldState) {
+            if (oldState.totalItems == 0 || typeof oldState.totalItems == 'undefined') return;
+            if (newState.rowsPerPage == -1) // All values
             {
-                var rowsPerPage = e.totalItems;
+                var rowsPerPage = newState.totalItems;
                 var page = 1;
             }
             else
             {
-                var rowsPerPage = e.rowsPerPage;
-                var page = e.page
+                var rowsPerPage = newState.rowsPerPage;
+                var page = newState.page
             }
             UserModel.paginate(rowsPerPage, page)
                 .then(response => {
