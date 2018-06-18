@@ -1,9 +1,10 @@
 # EloquentJs
-
+```
 php artisan migrate
-
 php artisan db:seed
+``` 
 
+[Vutify data table example](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table)
 
 ## Example
 ```javascript
