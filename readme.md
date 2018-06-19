@@ -1,6 +1,6 @@
 # EloquentJs
 
-##Install:
+## Install:
 ```
 git clone https://github.com/ognjen-petrovic/EloquentJs.git
 cd EloquentJs
@@ -23,7 +23,7 @@ php -S localhost:80
 // http://localhost/vuetify/data-table-order-by
 ``` 
 
-##Online demo pages
+## Online demo pages
 
 [Codemirror console](http://eloquentjs.ognjen-petrovic.from.hr/codemirror)
 
