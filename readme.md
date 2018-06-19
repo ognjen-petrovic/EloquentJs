@@ -14,13 +14,12 @@ php artisan migrate
 php artisan db:seed
 
 // start server
-cd public
-php -S localhost:80
+php artisan serve
 
 // available demo pages:
-// http://localhost/codemirror
-// http://localhost/vuetify/data-table
-// http://localhost/vuetify/data-table-order-by
+// http://127.0.0.1:8000/codemirror
+// http://127.0.0.1:8000/vuetify/data-table
+// http://127.0.0.1:8000/vuetify/data-table-order-by
 ``` 
 
 ## Online demo pages:
