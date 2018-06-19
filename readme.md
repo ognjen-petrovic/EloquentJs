@@ -23,7 +23,7 @@ php -S localhost:80
 // http://localhost/vuetify/data-table-order-by
 ``` 
 
-## Online demo pages
+## Online demo pages:
 
 [Codemirror console](http://eloquentjs.ognjen-petrovic.from.hr/codemirror)
 
@@ -31,7 +31,7 @@ php -S localhost:80
 
 [Vuetify data table example, orderable by ID, Name or E-mail](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table-order-by)
 
-## Example
+## Example:
 ```javascript
 var UserModel = EloquentJs.ModelFactory('User');
 UserModel.all().then(data => console.log('All users: ', data));
