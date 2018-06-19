@@ -1,19 +1,31 @@
 # EloquentJs
+
+##Install:
 ```
 git clone https://github.com/ognjen-petrovic/EloquentJs.git
 cd EloquentJs
-
 composer install
 
 cp .env.example .env
 php artisan key:generate
 
+// edit .env and setup the database, then seed...
 php artisan migrate
 php artisan db:seed
 
-http://localhost/vuetify/data-table
-http://localhost/vuetify/data-table-order-by
+// start server
+cd public
+php -S localhost:80
+
+// available demo pages:
+// http://localhost/codemirror
+// http://localhost/vuetify/data-table
+// http://localhost/vuetify/data-table-order-by
 ``` 
+
+##Online demo pages
+
+[Codemirror console](http://eloquentjs.ognjen-petrovic.from.hr/codemirror)
 
 [Vuetify data table example](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table)
 
