@@ -146,10 +146,6 @@
                     resolve(new this(data));
             });
         });
-
-
-        var promise = ejs.httpAdapter.get(this._getAndClearMethods());
-        return promise;
     }
 
     ejs.common.where = function (column, operator, value) {

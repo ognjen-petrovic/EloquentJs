@@ -1,7 +1,18 @@
 # EloquentJs
 ```
+git clone https://github.com/ognjen-petrovic/EloquentJs.git
+cd EloquentJs
+
+composer install
+
+cp .env.example .env
+php artisan key:generate
+
 php artisan migrate
 php artisan db:seed
+
+http://localhost/vuetify/data-table
+http://localhost/vuetify/data-table-order-by
 ``` 
 
 [Vuetify data table example](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table)
@@ -26,5 +37,5 @@ ObjectModel.where('id', '<', 5).update({capacity: 1});
 
 //paginate
 UserModel.paginate(10,1).then(data => console.log('Paginate users: ', data));
-UserModel.orderBy('name').paginate(10,1).then(data => console.log('Paginate ordered users: ', data));;
+UserModel.orderBy('name').paginate(10,1).then(data => console.log('Paginate ordered users: ', data));
 ```
