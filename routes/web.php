@@ -26,3 +26,9 @@ Route::get('/vuetify/data-table', function () {
 Route::get('/vuetify/data-table-order-by', function () {
     return view('vuetify/data-table-order-by');
 });
+
+Route::get('/api/v1','EloquentJsApi@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

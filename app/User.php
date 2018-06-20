@@ -9,6 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const TYPE_ADMIN = 'admin';
     /**
      * The attributes that are mass assignable.
      *
@@ -29,5 +30,9 @@ class User extends Authenticatable
 
     public function objects() {
         return $this->hasMany(Object::class);
+    }
+
+    public function isAdmin() {
+        return $this->type === self::TYPE_ADMIN;
     }
 }

@@ -21,3 +21,13 @@ $factory->define(App\User::class, function (Faker $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->defineAs(App\User::class, 'admin', function (Faker $faker) {
+    return [
+        'name' => env('ELOQUENTJS_ADMIN_NAME'),
+        'email' => env('ELOQUENTJS_ADMIN_EMAIL'),
+        'password' =>  bcrypt(env('ELOQUENTJS_ADMIN_PASSWORD')), // secret
+        'remember_token' => str_random(10),
+        'type' => App\User::TYPE_ADMIN,
+    ];
+});

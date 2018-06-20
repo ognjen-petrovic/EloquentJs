@@ -8,8 +8,12 @@ composer install
 
 cp .env.example .env
 php artisan key:generate
+php artisan make:auth
 
-// edit .env and setup the database, then seed...
+// edit .env to 
+// setup the database, 
+// change ELOQUENTJS_ADMIN_NAME, ELOQUENTJS_ADMIN_EMAIL and ELOQUENTJS_ADMIN_PASSWORD
+// then seed...
 php artisan migrate
 php artisan db:seed
 
