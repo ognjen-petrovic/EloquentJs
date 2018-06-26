@@ -88,9 +88,6 @@
     ejs.common = {};
 
     ejs.common._addMethod = function (name, params) {
-        if (this._methods.length == 0) {
-            name = this._model_name + '::' + name;
-        }
         this._methods.push(this._createMethodObject(name, params));
     }
 
@@ -103,11 +100,18 @@
         return this._methods.splice(0, this._methods.length);
     }
 
+    ejs.common._getPayload = function () {
+        return {
+            model: this._model_name,
+            methods: this._getAndClearMethods()
+        }
+    }
+
     ejs.common.all = function () {
         return new Promise((resolve, reject) => {
             this._addMethod('all', []);
 
-            var promise = ejs.httpAdapter.get(this._getAndClearMethods());
+            var promise = ejs.httpAdapter.get(this._getPayload());
             promise.then(data => {
                 resolve(data); 
                 /*
@@ -122,14 +126,14 @@
 
     ejs.common.count = function () {
         this._addMethod('count', []);
-        return ejs.httpAdapter.get(this._getAndClearMethods());
+        return ejs.httpAdapter.get(this._getPayload());
     }
 
     //https://laravel.com/api/5.5/Illuminate/Database/Query/Builder.html#method_paginate
     //int $perPage = 15, array $columns = ['*'], string $pageName = 'page', int|null $page = null
     ejs.common.paginate = function (perPage, page) {
         this._addMethod('paginate', [perPage, ['*'], 'page', page]);
-        return ejs.httpAdapter.get(this._getAndClearMethods());
+        return ejs.httpAdapter.get(this._getPayload());
     }
 
     ejs.common.find = function (id) {
@@ -137,7 +141,7 @@
         return new Promise((resolve, reject) => {
             this._addMethod('find', [id]);
 
-            var promise = ejs.httpAdapter.get(this._getAndClearMethods());
+            var promise = ejs.httpAdapter.get(this._getPayload());
             promise.then(data => {
 
                 if (data == null)
@@ -172,7 +176,7 @@
         return new Promise((resolve, reject) => {
             this._addMethod('get', [columns]);
 
-            var promise = ejs.httpAdapter.get(this._getAndClearMethods());
+            var promise = ejs.httpAdapter.get(this._getPayload());
             promise.then(data => {
                 resolve(data);
                 /*
@@ -195,7 +199,7 @@
      */
     ejs.common.update = function (oFieldsValues) {
         this._addMethod('update', [oFieldsValues]);
-        var promise = ejs.httpAdapter.get(this._getAndClearMethods());
+        var promise = ejs.httpAdapter.get(this._getPayload());
         return promise;
     }
 
@@ -229,7 +233,7 @@
                     modelClass._addMethod('save', []); 
                     */
                     modelClass._addMethod('updateOrCreate', [this]);
-                    var promise = ejs.httpAdapter.get(modelClass._getAndClearMethods());
+                    var promise = ejs.httpAdapter.get(modelClass._getPayload());
                     promise.then(data => {
                         resolve(data);
                     });
@@ -243,6 +247,7 @@
         modelClass._addMethod = ejs.common._addMethod;
         modelClass._createMethodObject = ejs.common._createMethodObject;
         modelClass._getAndClearMethods = ejs.common._getAndClearMethods;
+        modelClass._getPayload = ejs.common._getPayload;
     
         modelClass.all = ejs.common.all;
         modelClass.count = ejs.common.count;

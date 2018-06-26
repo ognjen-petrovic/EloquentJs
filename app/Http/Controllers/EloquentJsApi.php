@@ -9,7 +9,7 @@ class EloquentJsApi extends Controller
 {
     public function index(Request $request)
     {
-        $methods = [
+        $actions = [
             'all'      => 'view',
             'count'    => 'view',
             'paginate' => 'view',
@@ -18,37 +18,32 @@ class EloquentJsApi extends Controller
             'get'      => 'view',
             'with'     => 'view',
             'update'   => 'update',
-            'orderBy'  => 'view'
+            'orderBy'  => 'view',
+            'find'  => 'view',
         ];
 
         if (is_null(\Auth::user()))
         {
             \Auth::login(new \App\User());
         }
-/*
-        var_dump(  \Gate::allows('view', \Auth::user()) );
-        var_dump(  \Gate::allows('create', \Auth::user()) );
-        var_dump(  \Gate::allows('update', \Auth::user()) );
-        var_dump(  \Gate::allows('delete', \Auth::user()) );
-        die();
-*/
-
 
         $payload = json_decode($request->input('payload'), true);
-/*
-        foreach($payload as $p)
+        $methods = $payload['methods'];
+        $model = $payload['model'];
+
+        foreach($methods as $m)
         {
-           // if ( \Gate::allows($p['method'], \Auth::user()) )
-           var_dump($p['method']);
-           var_dump(\Gate::allows($p['method'], \Auth::user()));
+           if ( array_key_exists($m['method'], $actions) == false || \Gate::allows($actions[$m['method']], \Auth::user()) == false)
+           {
+                abort(403, 'Unauthorized action.'); 
+           }
         }
 
-        die;
-*/
-        $ret = call_user_func_array('\\App\\' . $payload[0]['method'], $payload[0]['params']);
-        for($i = 1; $i < count($payload); ++$i)
+        $ret = call_user_func_array('\\App\\' . $model . '::' . $methods[0]['method'], $methods[0]['params']);
+
+        for($i = 1; $i < count($methods); ++$i)
         {
-            $ret = call_user_func_array([$ret, $payload[$i]['method']], $payload[$i]['params']);
+            $ret = call_user_func_array([$ret, $methods[$i]['method']], $methods[$i]['params']);
         }
 
         if (is_bool($ret))
