@@ -72,11 +72,11 @@ new Vue({
     watch: {
         pagination: {
             handler (newState, oldState) {
-                if (oldState.totalItems == 0 || typeof oldState.totalItems == 'undefined') return;
+                if (oldState.totalItems == 'undefined') return;
                 this.loading = true;
                 if (newState.rowsPerPage == -1) // All values
                 {
-                    var rowsPerPage = newState.totalItems;
+                    var rowsPerPage = this.totalUsers;
                     var page = 1;
                 }
                 else
