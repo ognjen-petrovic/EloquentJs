@@ -14,7 +14,6 @@
   <v-data-table
       :headers="headers"
       :items="users"
-      :search="search"
       :pagination.sync="pagination"
       :total-items="totalUsers"
       :loading="loading"
