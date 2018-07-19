@@ -14,7 +14,6 @@
   <v-data-table
       :headers="headers"
       :items="users"
-      :search="search"
       :pagination.sync="pagination"
       :total-items="totalUsers"
       :loading="loading"
@@ -40,7 +39,6 @@ new Vue({
     el: '#app',
     data () {
         return {
-            search: '',
             totalUsers: 0,
             users: [],
             loading: true,
