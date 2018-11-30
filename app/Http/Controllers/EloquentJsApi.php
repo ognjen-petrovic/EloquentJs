@@ -20,6 +20,7 @@ class EloquentJsApi extends Controller
             'update'   => 'update',
             'orderBy'  => 'view',
             'find'  => 'view',
+            'updateOrCreate' => 'create'
         ];
 
         if (is_null(\Auth::user()))
