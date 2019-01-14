@@ -24,6 +24,7 @@ php artisan serve
 // http://127.0.0.1:8000/codemirror
 // http://127.0.0.1:8000/vuetify/data-table
 // http://127.0.0.1:8000/vuetify/data-table-order-by
+// http://127.0.0.1:8000/factory/vuetify/data-table?model=Object&rowsPerPage=10
 ``` 
 
 ## Online demo pages:
@@ -31,6 +32,7 @@ php artisan serve
 [Codemirror console](http://eloquentjs.ognjen-petrovic.from.hr/codemirror)
 
 [Vuetify data table example](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table)
+[Vurtify data table factory example](http://eloquentjs.ognjen-petrovic.from.hr/factory/vuetify/data-table?model=User&rowsPerPage=10)
 
 [Vuetify data table example, orderable by ID, Name or E-mail](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table-order-by)
 
