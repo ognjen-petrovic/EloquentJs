@@ -23,6 +23,8 @@ Route::get('/vuetify/data-table', function () {
     return view('vuetify/data-table');
 });
 
+Route::get('factory/vuetify/data-table', 'FactoryDataTable@index');
+
 Route::get('/vuetify/data-table-order-by', function () {
     return view('vuetify/data-table-order-by');
 });

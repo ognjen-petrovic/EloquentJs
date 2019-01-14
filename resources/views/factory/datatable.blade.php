@@ -6,25 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EloquentJs - Vuetify data table example</title>
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
-  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
+  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div id="app">
   <v-app id="inspire">
   <v-data-table
       :headers="headers"
-      :items="users"
+      :items="records"
       :pagination.sync="pagination"
-      :total-items="totalUsers"
+      :total-items="totalRecords"
       :loading="loading"
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td>@{{ props.item.id }}</td>
-        <td class="text-xs-left">@{{ props.item.name }}</td>
-        <td class="text-xs-left">@{{ props.item.email }}</td>
-        <td class="text-xs-left">@{{ props.item.created_at }}</td>
-        <td class="text-xs-left">@{{ props.item.updated_at }}</td>
+        @foreach ($headers as $header)
+            <td>@{{ props.item.{!! $header['value'] !!} }}</td>
+        @endforeach
       </template>
     </v-data-table>
   </v-app>
@@ -34,37 +32,26 @@
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
   <script>
-var UserModel = EloquentJs.ModelFactory('User');
+var Model = EloquentJs.ModelFactory('{{ $model }}');
 new Vue({
     el: '#app',
     data () {
         return {
-            totalUsers: 0,
-            users: [],
+            totalRecords: 0,
+            records: [],
             loading: true,
             pagination: {
-                rowsPerPage:10,
+                rowsPerPage:{{ $rowsPerPage }},
             },
-            headers: [
-                {
-                text: 'ID',
-                align: 'left',
-                sortable: false,
-                value: 'id'
-                },
-                { text: 'Name', value: 'name', sortable: false },
-                { text: 'E-mail', value: 'email', sortable: false },
-                { text: 'Created at', value: 'created_at', sortable: false },
-                { text: 'Updated at', value: 'updated_at', sortable: false },
-            ]
+            headers: @json($headers)
         }
     },
 
     mounted () {
-        UserModel.paginate(this.pagination.rowsPerPage ,1)
+        Model.paginate(this.pagination.rowsPerPage ,1)
             .then(response => {
-                this.users = response.data
-                this.totalUsers = response.total
+                this.records = response.data
+                this.totalRecords = response.total
                 this.loading = false
             })
     },
@@ -76,7 +63,7 @@ new Vue({
                 this.loading = true;
                 if (newState.rowsPerPage == -1) // All values
                 {
-                    var rowsPerPage = this.totalUsers;
+                    var rowsPerPage = this.totalRecords;
                     var page = 1;
                 }
                 else
@@ -84,10 +71,10 @@ new Vue({
                     var rowsPerPage = newState.rowsPerPage;
                     var page = newState.page
                 }
-                UserModel.paginate(rowsPerPage, page)
+                Model.paginate(rowsPerPage, page)
                     .then(response => {
-                        this.users = response.data
-                        this.totalUsers = response.total
+                        this.records = response.data
+                        this.totalRecords = response.total
                         this.loading = false
                     })
             },
