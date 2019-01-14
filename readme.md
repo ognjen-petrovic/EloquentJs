@@ -32,6 +32,7 @@ php artisan serve
 [Codemirror console](http://eloquentjs.ognjen-petrovic.from.hr/codemirror)
 
 [Vuetify data table example](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table)
+
 [Vurtify data table factory example](http://eloquentjs.ognjen-petrovic.from.hr/factory/vuetify/data-table?model=User&rowsPerPage=10)
 
 [Vuetify data table example, orderable by ID, Name or E-mail](http://eloquentjs.ognjen-petrovic.from.hr/vuetify/data-table-order-by)
