@@ -15,4 +15,9 @@ class UserModelCrud {
     {
         return self::headers;
     }
+
+    static public function getWithRelations()
+    {
+        return [];
+    }
 }

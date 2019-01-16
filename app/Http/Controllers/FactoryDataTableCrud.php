@@ -13,11 +13,13 @@ class FactoryDataTableCrud extends Controller{
         
         $class = '\\App\\Models\\Crud\\' . $model . 'ModelCrud';
         $headers = $class::getDataTableHeaders();
+        $with = $class::getWithRelations();
 
         return view('factory/datatable-crud', [
             'model' => $model,
             'rowsPerPage' => $request->input('rowsPerPage'),
-            'headers' => $headers
+            'headers' => $headers,
+            'with' => $with
         ]);
     }
 }

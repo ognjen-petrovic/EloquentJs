@@ -106,7 +106,19 @@
 
 
   <script>
-var Model = EloquentJs.ModelFactory('{{ $model }}');
+// var Model = {
+//     model: 
+// }
+var Model = function()
+{
+    @if (count($with) > 0)
+        return Model.Model.with(@json($with));
+    @else
+        return Model.Model
+    @endif 
+}
+Model.Model = EloquentJs.ModelFactory('{{ $model }}');
+
 new Vue({
     el: '#app',
     data () {
@@ -142,7 +154,7 @@ new Vue({
     },
 
     mounted () {
-        Model.orderBy(this.pagination.sortBy, !this.pagination.descending)
+        Model().orderBy(this.pagination.sortBy, !this.pagination.descending)
             .paginate(this.pagination.rowsPerPage ,1)
             .then(response => {
                 this.items = response.data
@@ -166,7 +178,7 @@ new Vue({
                     var rowsPerPage = newState.rowsPerPage;
                     var page = newState.page
                 }
-                Model.orderBy(newState.sortBy, !newState.descending).paginate(rowsPerPage, page)
+                Model().orderBy(newState.sortBy, !newState.descending).paginate(rowsPerPage, page)
                     .then(response => {
                         this.items = response.data
                         this.totalItems = response.total
