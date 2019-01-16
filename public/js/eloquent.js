@@ -203,6 +203,42 @@
         return promise;
     }
 
+    ejs.common.create = function (oFieldsValues) {
+        return new Promise((resolve, reject) => {
+            this._addMethod('create', [oFieldsValues]);
+            var promise = ejs.httpAdapter.get(this._getPayload());
+            promise.then(data => {
+    
+                if (data == null)
+                    resolve(null);
+                else
+                    resolve(new this(data));
+            });
+        });
+        
+    }
+
+    ejs.common.destroy = function (id) {
+        return new Promise((resolve, reject) => {
+            this._addMethod('destroy', [id]);
+            var promise = ejs.httpAdapter.get(this._getPayload());
+            promise.then(data => {
+    
+                if (data == null)
+                    resolve(null);
+                else
+                    resolve(data);
+            });
+        });
+        
+    }
+
+    ejs.common.updateOrCreate = function (oAttributes, oValues = {}) {
+        this._addMethod('updateOrCreate', [oAttributes, oValues]);
+        var promise = ejs.httpAdapter.get(this._getPayload());
+        return promise;
+    }
+
     ejs.common.orderBy = function (column, direction = 'asc') {
         if (direction === false)
         {
@@ -258,7 +294,10 @@
         modelClass.get = ejs.common.get;
         modelClass.with = ejs.common.with;
         modelClass.update = ejs.common.update;
+        modelClass.updateOrCreate = ejs.common.updateOrCreate;
+        modelClass.create = ejs.common.create;
         modelClass.orderBy = ejs.common.orderBy;
+        modelClass.destroy = ejs.common.destroy;
     
         return modelClass;
     }

@@ -29,6 +29,10 @@ Route::get('/vuetify/data-table-order-by', function () {
     return view('vuetify/data-table-order-by');
 });
 
+Route::get('/vuetify/data-table-order-by-crud', function () {
+    return view('vuetify/data-table-order-by-crud');
+});
+
 Route::get('/api/v1','EloquentJsApi@index');
 
 Auth::routes();
