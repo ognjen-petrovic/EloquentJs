@@ -17,9 +17,9 @@ class EloquentJsApi extends Controller
             'orWhere'  => 'view',
             'get'      => 'view',
             'with'     => 'view',
-            'update'   => 'update',
             'orderBy'  => 'view',
-            'find'  => 'view',
+            'find'     => 'view',
+            'update'   => 'update',
             'updateOrCreate' => 'create',
             'create' => 'create',
             'destroy' => 'delete'

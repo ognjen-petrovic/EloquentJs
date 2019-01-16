@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class FactoryDataTable extends Controller{
+class FactoryDataTableCrud extends Controller{
 
     public function index(Request $request){
 
@@ -14,7 +14,7 @@ class FactoryDataTable extends Controller{
         $class = '\\App\\Models\\Crud\\' . $model . 'ModelCrud';
         $headers = $class::getDataTableHeaders();
 
-        return view('factory/datatable', [
+        return view('factory/datatable-crud', [
             'model' => $model,
             'rowsPerPage' => $request->input('rowsPerPage'),
             'headers' => $headers

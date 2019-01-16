@@ -20,113 +20,69 @@
       flat
       color="white"
     >
-      <v-toolbar-title>My CRUD</v-toolbar-title>
-      <v-divider
-        class="mx-2"
-        inset
-        vertical
-      ></v-divider>
-      <v-spacer></v-spacer>
-      <v-dialog
-        v-model="dialog"
-        max-width="500px"
-        
-      >
-        <v-btn
-          slot="activator"
-          color="primary"
-          dark
-          class="mb-2"
-        >
-          New Item
-        </v-btn>
-
-        <v-card>
-          <v-card-title>
-            <span class="headlines">
-              @{{ formTitle }}
-            </span>
-          </v-card-title>
-
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex
-                  xs12
-                  sm6
-                  md4
-                >
-                  <v-text-field
-                    v-model="editedItem.name"
-                    label="User name"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex
-                  xs12
-                  sm6
-                  md4
-                >
-                  <v-text-field
-                    v-model="editedItem.email"
-                    label="E-mail"
-                  ></v-text-field>
-                </v-flex>
-
-                <v-flex
-                  xs12
-                  sm6
-                  md4
-                >
-                  <v-text-field
-                    v-model="editedItem.password"
-                    label="password"
-                  ></v-text-field>
-                </v-flex>
-       
- 
-              </v-layout>
-            </v-container>
-          </v-card-text>
-
-          <v-card-actions>
+        <v-toolbar-title>{{ str_plural($model) }}</v-toolbar-title>
+        <v-divider
+            class="mx-2"
+            inset
+            vertical
+        ></v-divider>
             <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              flat
-              @click="close"
-            >
-              Cancel
+
+        <v-dialog v-model="dialog" max-width="500px">
+
+            <v-btn slot="activator" color="primary" dark class="mb-2">
+                New {{ $model }}
             </v-btn>
-            <v-btn
-              color="blue darken-1"
-              flat
-              @click="save"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+
+            <v-card>
+                <v-card-title>
+                    <span class="headlines">
+                    @{{ formTitle }}
+                    </span>
+                </v-card-title>
+
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+                            <v-flex xs12 sm6 md4>
+                                <v-text-field v-model="editedItem.name" label="User name"></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs12 sm6 md4>
+                                <v-text-field v-model="editedItem.email" label="E-mail"></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs12 sm6 md4>
+                                <v-text-field v-model="editedItem.password" label="password"></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                </v-card-actions>
+
+            </v-card>
         
       </v-dialog>
     </v-toolbar>
 
-
-
-
   <v-data-table
       :headers="headers"
-      :items="users"
+      :items="items"
       :pagination.sync="pagination"
-      :total-items="totalUsers"
+      :total-items="totalItems"
       :loading="loading"
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td>@{{ props.item.id }}</td>
-        <td class="text-xs-left">@{{ props.item.name }}</td>
-        <td class="text-xs-left">@{{ props.item.email }}</td>
-        <td class="text-xs-left">@{{ props.item.created_at }}</td>
-        <td class="text-xs-left">@{{ props.item.updated_at }}</td>
+
+        @foreach ($headers as $header)
+            <td>@{{ props.item.{!! $header['value'] !!} }}</td>
+        @endforeach
 
         <td class="justify-center layout px-0">
           <v-icon
@@ -150,7 +106,7 @@
 
 
   <script>
-var UserModel = EloquentJs.ModelFactory('User');
+var Model = EloquentJs.ModelFactory('{{ $model }}');
 new Vue({
     el: '#app',
     data () {
@@ -168,42 +124,29 @@ new Vue({
                 password: ''
             },
 
-            totalUsers: 0,
-            users: [],
+            totalItems: 0,
+            items: [],
             loading: true,
             pagination: {
                 rowsPerPage:10,
                 descending: true
             },
-            headers: [
-                {
-                text: 'ID',
-                align: 'left',
-                sortable: true,
-                value: 'id'
-                },
-                { text: 'Name', value: 'name', sortable: true },
-                { text: 'E-mail', value: 'email', sortable: true },
-                { text: 'Created at', value: 'created_at', sortable: false },
-                { text: 'Updated at', value: 'updated_at', sortable: false },
-
-                { text: 'Actions', value: 'name', sortable: false }
-            ]
+            headers: @json($headers)
         }
     },
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item!' : 'Edit Item'
+        return this.editedIndex === -1 ? 'New {{ $model }}' : 'Edit {{ $model }}'
       }
     },
 
     mounted () {
-        UserModel.orderBy(this.pagination.sortBy, !this.pagination.descending)
+        Model.orderBy(this.pagination.sortBy, !this.pagination.descending)
             .paginate(this.pagination.rowsPerPage ,1)
             .then(response => {
-                this.users = response.data
-                this.totalUsers = response.total
+                this.items = response.data
+                this.totalItems = response.total
                 this.loading = false
             })
     },
@@ -215,7 +158,7 @@ new Vue({
                 this.loading = true;
                 if (newState.rowsPerPage == -1) // All values
                 {
-                    var rowsPerPage = this.totalUsers;
+                    var rowsPerPage = this.totalItems;
                     var page = 1;
                 }
                 else
@@ -223,10 +166,10 @@ new Vue({
                     var rowsPerPage = newState.rowsPerPage;
                     var page = newState.page
                 }
-                UserModel.orderBy(newState.sortBy, !newState.descending).paginate(rowsPerPage, page)
+                Model.orderBy(newState.sortBy, !newState.descending).paginate(rowsPerPage, page)
                     .then(response => {
-                        this.users = response.data
-                        this.totalUsers = response.total
+                        this.items = response.data
+                        this.totalItems = response.total
                         this.loading = false
                     })
             },
@@ -237,19 +180,19 @@ new Vue({
     methods: {
 
         editItem (item) {
-          this.editedIndex = this.users.indexOf(item)
+          this.editedIndex = this.items.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialog = true
         },
 
         deleteItem (item) {
-          const index = this.users.indexOf(item)
+          const index = this.items.indexOf(item)
           if (confirm('Are you sure you want to delete this item?'))
           {
-             UserModel.destroy(item.id).then(data => {
+             Model.destroy(item.id).then(data => {
                if (data === 1)
                {
-                this.users.splice(index, 1)
+                this.items.splice(index, 1)
                }
              });
           }
@@ -267,7 +210,7 @@ new Vue({
         save () {
             if (this.editedIndex === -1)
             {
-                UserModel.create(this.editedItem).then(data => {
+                Model.create(this.editedItem).then(data => {
                   this.close();
                   var o = Object.assign({}, this.pagination)
                   o.page = 1;
@@ -276,10 +219,10 @@ new Vue({
             }
             else
             {
-              UserModel.where('id', this.editedItem.id).update(this.editedItem).then(data => {
+              Model.where('id', this.editedItem.id).update(this.editedItem).then(data => {
                 if (data === 1)
                 {
-                  Object.assign(this.users[this.editedIndex], this.editedItem);
+                  Object.assign(this.items[this.editedIndex], this.editedItem);
                   this.close();
                 }
                   

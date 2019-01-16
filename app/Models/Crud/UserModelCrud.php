@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Headers;
+namespace App\Models\Crud;
 
-class UserModelHeaders {
+class UserModelCrud {
     const headers = [
         [ "text"=> "ID", "value"=> "id","align"=> "left","sortable"=> false],
         [ "text"=> "Name", "value"=> "name", "sortable"=> false ],
@@ -10,4 +10,9 @@ class UserModelHeaders {
         [ "text"=> "Created at", "value"=> "created_at", "sortable"=> false ],
         [ "text"=> "Updated at", "value"=> "updated_at", "sortable"=> false ],
     ];
+
+    static public function getDataTableHeaders()
+    {
+        return self::headers;
+    }
 }
