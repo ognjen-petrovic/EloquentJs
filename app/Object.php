@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\Model;
 
 class Object extends Model
 {
@@ -12,4 +12,13 @@ class Object extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected static $rules = [
+        'name' => 'required'
+    ];
+
+    //Use this for custom messages
+    protected static $messages = [
+        'name.required' => 'My custom message for :attribute required'
+    ];
 }

@@ -42,15 +42,30 @@ class EloquentJsApi extends Controller
            }
         }
 
-        $ret = call_user_func_array('\\App\\' . $model . '::' . $methods[0]['method'], $methods[0]['params']);
+        $ret[0] = call_user_func_array('\\App\\' . $model . '::' . $methods[0]['method'], $methods[0]['params']);
 
         for($i = 1; $i < count($methods); ++$i)
         {
-            $ret = call_user_func_array([$ret, $methods[$i]['method']], $methods[$i]['params']);
+            $ret[$i] = call_user_func_array([$ret[$i-1], $methods[$i]['method']], $methods[$i]['params']);
+            if ($ret[$i-1] instanceof \App\Model && $ret[$i-1]->hasErrors())
+            {
+                return response($ret[$i-1]->getErrors()->toArray(), 422); 
+            }
         }
-
+     
+        $ret = end($ret);
         if (is_bool($ret))
-            $ret = (string) $ret;
+        {
+            if ($ret == true)
+            {
+                $ret = 1;
+            }
+            else
+            {
+                $ret = 0;
+            }
+                
+        }
             
         return $ret;
     }

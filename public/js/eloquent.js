@@ -17,6 +17,7 @@
 
                     // Instantiates the XMLHttpRequest
                     var client = new XMLHttpRequest();
+                    //client.setRequestHeader('accept', 'application/json');
                     client.responseType = (responseType ) ? responseType : 'json';
                     var uri = url;
 
@@ -34,6 +35,7 @@
                     }
 
                     client.open(method, uri);
+                    client.setRequestHeader('accept', 'application/json');
                     client.send();
 
                     client.onload = function() {
@@ -263,17 +265,46 @@
 
             save(){
                 return new Promise((resolve, reject) => {
-                    /*                  
+                        /*           
                     modelClass._addMethod('find', [this.id]);
-                    modelClass._addMethod('fill', [this]);
-                    modelClass._addMethod('save', []); 
+                    modelClass._addMethod('save', []);
+                    var promise = ejs.httpAdapter.get(modelClass._getPayload()); 
+                    promise.then(data => {
+                        resolve(data);
+                    });
                     */
+
+                    
+                    modelClass._addMethod('updateOrCreate', [{id:this.id}, this]);
+                    var promise = ejs.httpAdapter.get(modelClass._getPayload());
+                    promise.then(data => {
+                        resolve(data);
+                    });
+                    
+                });
+                
+            }
+
+            update(){
+                return new Promise((resolve, reject) => {
+                                   
+                    modelClass._addMethod('find', [this.id]);
+                    modelClass._addMethod('update', [this]);
+                    var promise = ejs.httpAdapter.get(modelClass._getPayload()); 
+                    promise.then(data => {
+                        resolve(data);
+                    });
+                    
+
+                    /*
                     modelClass._addMethod('updateOrCreate', [this]);
                     var promise = ejs.httpAdapter.get(modelClass._getPayload());
                     promise.then(data => {
                         resolve(data);
                     });
+                    */
                 });
+                
             }
         };
     

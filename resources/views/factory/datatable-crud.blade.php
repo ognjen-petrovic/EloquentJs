@@ -111,13 +111,13 @@
 // }
 var Model = function()
 {
-    @if (count($with) > 0)
-        return Model.Model.with(@json($with));
-    @else
-        return Model.Model
-    @endif 
+    return Model.Model
 }
 Model.Model = EloquentJs.ModelFactory('{{ $model }}');
+Model.withRelations = function()
+{
+    return Model.Model.with(@json($with));
+}
 
 new Vue({
     el: '#app',
@@ -154,7 +154,7 @@ new Vue({
     },
 
     mounted () {
-        Model().orderBy(this.pagination.sortBy, !this.pagination.descending)
+        Model.withRelations().orderBy(this.pagination.sortBy, !this.pagination.descending)
             .paginate(this.pagination.rowsPerPage ,1)
             .then(response => {
                 this.items = response.data
@@ -178,7 +178,7 @@ new Vue({
                     var rowsPerPage = newState.rowsPerPage;
                     var page = newState.page
                 }
-                Model().orderBy(newState.sortBy, !newState.descending).paginate(rowsPerPage, page)
+                Model.withRelations().orderBy(newState.sortBy, !newState.descending).paginate(rowsPerPage, page)
                     .then(response => {
                         this.items = response.data
                         this.totalItems = response.total
@@ -190,7 +190,15 @@ new Vue({
     },
 
     methods: {
+        getItemEditableProperties(item) {
+            var o = {};
+            for (var prop in this.defaultItem)
+            {
+                o[prop] = item[prop];
+            }
 
+            return o;
+        },
         editItem (item) {
           this.editedIndex = this.items.indexOf(item)
           this.editedItem = Object.assign({}, item)
@@ -201,7 +209,7 @@ new Vue({
           const index = this.items.indexOf(item)
           if (confirm('Are you sure you want to delete this item?'))
           {
-             Model.destroy(item.id).then(data => {
+             Model().destroy(item.id).then(data => {
                if (data === 1)
                {
                 this.items.splice(index, 1)
@@ -222,7 +230,7 @@ new Vue({
         save () {
             if (this.editedIndex === -1)
             {
-                Model.create(this.editedItem).then(data => {
+                Model().create(this.editedItem).then(data => {
                   this.close();
                   var o = Object.assign({}, this.pagination)
                   o.page = 1;
@@ -231,7 +239,7 @@ new Vue({
             }
             else
             {
-              Model.where('id', this.editedItem.id).update(this.editedItem).then(data => {
+              Model().where('id', this.editedItem.id).update(this.getItemEditableProperties(this.editedItem)).then(data => {
                 if (data === 1)
                 {
                   Object.assign(this.items[this.editedIndex], this.editedItem);
