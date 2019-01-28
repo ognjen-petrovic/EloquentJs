@@ -44,7 +44,7 @@
                             resolve(this.response);
                         } else {
                             // Performs the function "reject" when this.status is different than 2xx
-                            reject(this.statusText);
+                            reject(this);
                         }
                     };
                     client.onerror = function() {
@@ -134,8 +134,26 @@
     //https://laravel.com/api/5.5/Illuminate/Database/Query/Builder.html#method_paginate
     //int $perPage = 15, array $columns = ['*'], string $pageName = 'page', int|null $page = null
     ejs.common.paginate = function (perPage, page) {
-        this._addMethod('paginate', [perPage, ['*'], 'page', page]);
-        return ejs.httpAdapter.get(this._getPayload());
+        //this._addMethod('paginate', [perPage, ['*'], 'page', page]);
+        //return ejs.httpAdapter.get(this._getPayload());
+        return new Promise((resolve, reject) => {
+            this._addMethod('paginate', [perPage, ['*'], 'page', page]);
+
+            var promise = ejs.httpAdapter.get(this._getPayload());
+            promise.then(data => {
+                var items = [];
+                for (var item of data.data)
+                {
+                    items.push(new this(item));
+                }
+
+                data.data = items;
+                if (data == null)
+                    resolve(null);
+                else
+                    resolve(data);
+            });
+        });
     }
 
     ejs.common.find = function (id) {
@@ -199,7 +217,8 @@
     /**
      * oFieldsValues {address: 'new addres, age: 666, ....}
      */
-    ejs.common.update = function (oFieldsValues) {
+    ejs.common.update = function (id, oFieldsValues) {
+        this._addMethod('find', [id]);
         this._addMethod('update', [oFieldsValues]);
         var promise = ejs.httpAdapter.get(this._getPayload());
         return promise;
@@ -277,23 +296,27 @@
                     
                     modelClass._addMethod('updateOrCreate', [{id:this.id}, this]);
                     var promise = ejs.httpAdapter.get(modelClass._getPayload());
-                    promise.then(data => {
+                    promise
+                    .then(data => {
                         resolve(data);
-                    });
+                    })
+                    .catch(data => {reject(data)});
                     
                 });
                 
             }
 
-            update(){
+            update(attributes){
                 return new Promise((resolve, reject) => {
                                    
                     modelClass._addMethod('find', [this.id]);
-                    modelClass._addMethod('update', [this]);
+                    modelClass._addMethod('update', [attributes]);
                     var promise = ejs.httpAdapter.get(modelClass._getPayload()); 
-                    promise.then(data => {
+                    promise
+                    .then(data => {
                         resolve(data);
-                    });
+                    })
+                    .catch(data => {reject(data)});
                     
 
                     /*

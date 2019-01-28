@@ -44,17 +44,24 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
-                            <v-flex xs12 sm6 md4>
+                            <!-- <v-flex xs12 sm6 md4>
                                 <v-text-field v-model="editedItem.name" label="User name"></v-text-field>
-                            </v-flex>
+                            </v-flex> -->
 
-                            <v-flex xs12 sm6 md4>
+                            <!-- <v-flex xs12 sm6 md4>
                                 <v-text-field v-model="editedItem.email" label="E-mail"></v-text-field>
                             </v-flex>
 
                             <v-flex xs12 sm6 md4>
                                 <v-text-field v-model="editedItem.password" label="password"></v-text-field>
-                            </v-flex>
+                            </v-flex> -->
+
+                            @foreach ($editableAttributes as $editableAttribute)
+                                <v-flex xs12 sm6 md4>
+                                    <v-text-field v-model="editedItem.{!! $editableAttribute['name'] !!}" label="{!! $editableAttribute['name'] !!}"></v-text-field>
+                                </v-flex>
+                            @endforeach
+                            
                         </v-layout>
                     </v-container>
                 </v-card-text>
@@ -81,7 +88,7 @@
       <template slot="items" slot-scope="props">
 
         @foreach ($headers as $header)
-            <td>@{{ props.item.{!! $header['value'] !!} }}</td>
+            <td>@{{ props.item.{!! $header['name'] !!} }}</td>
         @endforeach
 
         <td class="justify-center layout px-0">
@@ -126,14 +133,14 @@ new Vue({
             dialog: false,
             editedIndex: -1,
             editedItem: {
-                name: '',
-                email: '',
-                password: ''
+                @foreach ($editableAttributes as $editableAttribute)
+                {!! $editableAttribute['name'] !!} : '',
+                @endforeach
             },
             defaultItem: {
-                name: '',
-                email: '',
-                password: ''
+                @foreach ($editableAttributes as $editableAttribute)
+                {!! $editableAttribute['name'] !!} : '',
+                @endforeach
             },
 
             totalItems: 0,
@@ -157,6 +164,7 @@ new Vue({
         Model.withRelations().orderBy(this.pagination.sortBy, !this.pagination.descending)
             .paginate(this.pagination.rowsPerPage ,1)
             .then(response => {
+                console.log(response)
                 this.items = response.data
                 this.totalItems = response.total
                 this.loading = false
@@ -200,8 +208,8 @@ new Vue({
             return o;
         },
         editItem (item) {
-          this.editedIndex = this.items.indexOf(item)
-          this.editedItem = Object.assign({}, item)
+          this.editedIndex = this.items.indexOf(item);
+          this.editedItem = Object.assign({}, item);//this.getItemEditableProperties(this.items[this.editedIndex]); //this.items[this.editedIndex];//Object.assign({}, item);
           this.dialog = true
         },
 
@@ -239,15 +247,23 @@ new Vue({
             }
             else
             {
-              Model().where('id', this.editedItem.id).update(this.getItemEditableProperties(this.editedItem)).then(data => {
-                if (data === 1)
-                {
-                  Object.assign(this.items[this.editedIndex], this.editedItem);
-                  this.close();
-                }
-                  
-                  
-              });
+            //   Model().where('id', this.editedItem.id).update(this.getItemEditableProperties(this.editedItem)).then(data => {
+            //     if (data === 1)
+            //     {
+            //       Object.assign(this.items[this.editedIndex], this.editedItem);
+            //       this.close();
+            //     }
+
+                Model().update(this.editedItem.id, this.getItemEditableProperties(this.editedItem))
+                .then(data => {
+                    if (data === 1)
+                    {
+                        //Object.assign(this.items[this.editedIndex], this.editedItem);
+                        Model().find(this.editedItem.id).then(data =>  Object.assign(this.items[this.editedIndex], data) )
+                        this.close();
+                    } 
+                })
+                .catch(reason => console.log(reason));
             }
 
             /*

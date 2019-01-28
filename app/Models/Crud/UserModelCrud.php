@@ -4,11 +4,11 @@ namespace App\Models\Crud;
 
 class UserModelCrud {
     const headers = [
-        [ "text"=> "ID", "value"=> "id","align"=> "left","sortable"=> false],
-        [ "text"=> "Name", "value"=> "name", "sortable"=> false ],
-        [ "text"=> "Email", "value"=> "email", "sortable"=> false ],
-        [ "text"=> "Created at", "value"=> "created_at", "sortable"=> false ],
-        [ "text"=> "Updated at", "value"=> "updated_at", "sortable"=> false ],
+        [ "text"=> "ID",    "name"=> "id","align"=> "left","sortable"=> false],
+        [ "text"=> "Name", "name"=> "name", "sortable"=> false ],
+        [ "text"=> "Email", "name"=> "email", "sortable"=> false ],
+        [ "text"=> "Created at", "name"=> "created_at", "sortable"=> false ],
+        [ "text"=> "Updated at", "name"=> "updated_at", "sortable"=> false ],
     ];
 
     static public function getDataTableHeaders()
@@ -19,5 +19,13 @@ class UserModelCrud {
     static public function getWithRelations()
     {
         return [];
+    }
+
+    static public function getEditableAttributes()
+    {
+        return [
+            ['name'=> 'name'],
+            ['name'=> 'email']
+        ];
     }
 }
